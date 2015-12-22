@@ -57,7 +57,8 @@ names(ds) <- c("SUBJECT","ACTIVITY",feat.name)
 ######  5. From the data set in step 4, creates a second, independent tidy data 
 ######    set with the average of each variable for each activity and each subject.
 
-tidy.ds <- ds %>% gather(VAR, VALUE,-c(SUBJECT,ACTIVITY)) %>%
-                  separate(VAR,into=c("FEATURE","STAT","AXIAL"))
-            
-      
+ds %>% gather(VAR, VALUE,-c(SUBJECT,ACTIVITY)) %>%
+      separate(VAR,into=c("FEATURE","STAT","AXIAL")) %>%
+      group_by(SUBJECT,ACTIVITY,FEATURE,STAT,AXIAL) %>%
+      summarize(AVG_VALUE=mean(VALUE)) %>%
+      spread(key=STAT,value=AVG_VALUE) -> tidy.ds
